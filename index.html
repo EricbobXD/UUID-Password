@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UUID & 密碼 生成器</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url("https://wallpapercave.com/dwp2x/wp8691406.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 70%;
+        }
+
+        .section {
+            margin: 0 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        button, input[type="button"] {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover, input[type="button"]:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            font-size: 20px;
+            font-family: monospace;
+            margin: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        p:hover {
+            opacity: 1;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .checkbox-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input[type="number"], input[type="checkbox"] {
+            vertical-align: middle;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        #randomStringResult {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>UUID 生成器</h1>
+            <button onclick="generateUUIDV1()">Generate UUID Version 1</button>
+            <p id="uuid_v1" onclick="copyToClipboard('uuid_v1')"></p>
+            <button onclick="generateUUIDV4()">Generate UUID Version 4</button>
+            <p id="uuid_v4" onclick="copyToClipboard('uuid_v4')"></p>
+        </div>
+        <div class="section">
+            <h1>密碼 生成器</h1>
+            <form id="randomStringForm">
+                <label for="length">密碼長度設定為：</label>
+                <input type="number" id="length" name="length" value="12" min="1"><br>
+                
+                <div class="checkbox-container">
+                    <label class="checkbox-label" for="useDigits">
+                        <input type="checkbox" id="useDigits" name="useDigits" checked>
+                        是否有數字?
+                    </label>
+                    
+                    <label class="checkbox-label" for="useUppercase">
+                        <input type="checkbox" id="useUppercase" name="useUppercase" checked>
+                        是否有大寫英文?
+                    </label>
+                    
+                    <label class="checkbox-label" for="useLowercase">
+                        <input type="checkbox" id="useLowercase" name="useLowercase" checked>
+                        是否有小寫英文?
+                    </label>
+                    
+                    <label class="checkbox-label" for="useSymbols">
+                        <input type="checkbox" id="useSymbols" name="useSymbols" checked>
+                        是否有其他符號?
+                    </label>
+                </div>
+                
+                <input type="button" value="生成" onclick="generateRandomString()">
+            </form>
+            <p id="randomStringResult" onclick="copyToClipboard('randomStringResult')"></p>
+        </div>
+    </div>
+
+    <script>
+        function generateUUIDV4() {
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0,
+                    v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+            document.getElementById('uuid_v4').innerText = uuid;
+        }
+
+        function generateUUIDV1() {
+            var now = new Date().getTime();
+            var uuid = 'xxxxxxxx-xxxx-1xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = (now + Math.random() * 16) % 16 | 0;
+                now = Math.floor(now / 16);
+                return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+            });
+            document.getElementById('uuid_v1').innerText = uuid;
+        }
+
+        function generateRandomString() {
+            var length = parseInt(document.getElementById("length").value);
+            var useDigits = document.getElementById("useDigits").checked;
+            var useUppercase = document.getElementById("useUppercase").checked;
+            var useLowercase = document.getElementById("useLowercase").checked;
+            var useSymbols = document.getElementById("useSymbols").checked;
+            
+            var characters = "";
+            if (useDigits) characters += "0123456789";
+            if (useUppercase) characters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if (useLowercase) characters += "abcdefghijklmnopqrstuvwxyz";
+            if (useSymbols) characters += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+            
+            if (characters === "") {
+                document.getElementById("randomStringResult").textContent = "操作無效:(";
+                return;
+            }
+            
+            var randomString = "";
+            for (var i = 0; i < length; i++) {
+                var randomIndex = Math.floor(Math.random() * characters.length);
+                randomString += characters.charAt(randomIndex);
+            }
+            
+            document.getElementById("randomStringResult").textContent = randomString;
+        }
+
+        function copyToClipboard(elementId) {
+            var text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Copied to clipboard: ' + text);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
