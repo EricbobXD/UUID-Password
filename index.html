@@ -1,230 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-    <title>UUID & 密碼 生成器</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUID & 密碼生成器</title>
     <style>
+        /* 全局設定 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-image: url("https://i.pinimg.com/736x/a9/b9/8c/a9b98c3574eaad53955a8bc73564792e.jpg");
-            background-size: cover;
-            background-repeat: no-repeat;
-            font-family: Arial, sans-serif;
-            color: #fff;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
         }
 
         .container {
+            width: 90%;
+            max-width: 700px;
             display: flex;
-            justify-content: space-around;
-            align-items: flex-start;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            width: 70%;
+            gap: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
 
-        .section {
-            margin: 0 20px;
+        .box {
+            flex: 1;
             text-align: center;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 28px;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        button, input[type="button"] {
-            margin: 10px;
-            padding: 15px 30px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #fff;
-            background-color: #007BFF;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            opacity: 0.9;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        button:hover, input[type="button"]:hover {
-            opacity: 1;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        p {
-            font-size: 20px;
-            font-family: monospace;
-            margin: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px 20px;
+            padding: 15px;
             border-radius: 10px;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        p:hover {
-            opacity: 1;
+        h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        select, input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        select, input {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 118, 150, 0.4);
+        }
+
+        .output {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-weight: bold;
+            word-break: break-word;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .output:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .small-text {
+            font-size: 12px;
+            color: #ddd;
+            margin-top: 5px;
         }
 
         label {
-            display: block;
-            margin-top: 10px;
-        }
-
-        .checkbox-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px 20px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input[type="number"], input[type="checkbox"] {
-            vertical-align: middle;
-        }
-
-        input[type="number"] {
-            width: 60px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
-
-        #randomStringResult {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        form {
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .checkbox-label {
             display: flex;
             align-items: center;
+            justify-content: start;
+            gap: 5px;
+            font-size: 14px;
+            margin: 5px 0;
+            cursor: pointer;
         }
 
-        .checkbox-label input[type="checkbox"] {
-            margin-right: 5px;
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* 響應式設計：手機版改成垂直排列 */
+        @media (max-width: 600px) {
+            .container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="section">
-            <h1>UUID 生成器</h1>
-            <button onclick="generateUUIDV1()">Generate UUID Version 1</button>
-            <p id="uuid_v1" onclick="copyToClipboard('uuid_v1')"></p>
-            <button onclick="generateUUIDV4()">Generate UUID Version 4</button>
-            <p id="uuid_v4" onclick="copyToClipboard('uuid_v4')"></p>
+        <!-- UUID 生成器 -->
+        <div class="box">
+            <h2>UUID 生成器</h2>
+            <select id="uuid_type">
+                <option value="V1">UUID V1</option>
+                <option value="V3">UUID V3</option>
+                <option value="V4" selected>UUID V4</option>
+                <option value="V5">UUID V5</option>
+            </select>
+            <button onclick="generateUUID()">生成 UUID</button>
+            <div id="uuid_result" class="output" onclick="copyToClipboard(this)">點擊以複製</div>
         </div>
-        <div class="section">
-            <h1>密碼 生成器</h1>
-            <form id="randomStringForm">
-                <label for="length">密碼長度設定為：</label>
-                <input type="number" id="length" name="length" value="12" min="1"><br>
-                
-                <div class="checkbox-container">
-                    <label class="checkbox-label" for="useDigits">
-                        <input type="checkbox" id="useDigits" name="useDigits" checked>
-                        是否有數字?
-                    </label>
-                    
-                    <label class="checkbox-label" for="useUppercase">
-                        <input type="checkbox" id="useUppercase" name="useUppercase" checked>
-                        是否有大寫英文?
-                    </label>
-                    
-                    <label class="checkbox-label" for="useLowercase">
-                        <input type="checkbox" id="useLowercase" name="useLowercase" checked>
-                        是否有小寫英文?
-                    </label>
-                    
-                    <label class="checkbox-label" for="useSymbols">
-                        <input type="checkbox" id="useSymbols" name="useSymbols" checked>
-                        是否有其他符號?
-                    </label>
-                </div>
-                
-                <input type="button" value="生成" onclick="generateRandomString()">
-            </form>
-            <p id="randomStringResult" onclick="copyToClipboard('randomStringResult')"></p>
+
+        <!-- 密碼生成器 -->
+        <div class="box">
+            <h2>密碼生成器</h2>
+            <input type="number" id="length" value="12" min="6" max="32" placeholder="密碼長度">
+            <label><input type="checkbox" id="useDigits" checked> 數字</label>
+            <label><input type="checkbox" id="useUppercase" checked> 大寫</label>
+            <label><input type="checkbox" id="useLowercase" checked> 小寫</label>
+            <label><input type="checkbox" id="useSymbols" checked> 符號</label>
+            <button onclick="generatePassword()">生成密碼</button>
+            <div id="password_result" class="output" onclick="copyToClipboard(this)">點擊以複製</div>
+            <p class="small-text">點擊輸出區可複製內容</p>
         </div>
     </div>
 
     <script>
-        function generateUUIDV4() {
-            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0,
-                    v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-            document.getElementById('uuid_v4').innerText = uuid;
+        function generateUUID() {
+            const type = document.getElementById("uuid_type").value;
+            if (type === "V1") {
+                const uuid = Date.now().toString(16) + "-xxxx-1xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+                    const r = Math.random() * 16 | 0;
+                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                });
+                displayResult('uuid_result', uuid);
+            } else if (type === "V4") {
+                displayResult('uuid_result', crypto.randomUUID());
+            } else {
+                const namespace = "example.com";
+                const encoder = new TextEncoder();
+                crypto.subtle.digest(type === "V3" ? "MD5" : "SHA-1", encoder.encode(namespace)).then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    hashArray[6] = (hashArray[6] & 0x0F) | (type === "V3" ? 0x30 : 0x50);
+                    hashArray[8] = (hashArray[8] & 0x3F) | 0x80;
+                    const uuid = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    displayResult('uuid_result', uuid);
+                });
+            }
         }
 
-        function generateUUIDV1() {
-            var now = new Date().getTime();
-            var uuid = 'xxxxxxxx-xxxx-1xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = (now + Math.random() * 16) % 16 | 0;
-                now = Math.floor(now / 16);
-                return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-            });
-            document.getElementById('uuid_v1').innerText = uuid;
-        }
+        function generatePassword() {
+            const length = document.getElementById("length").value;
+            const useDigits = document.getElementById("useDigits").checked;
+            const useUppercase = document.getElementById("useUppercase").checked;
+            const useLowercase = document.getElementById("useLowercase").checked;
+            const useSymbols = document.getElementById("useSymbols").checked;
 
-        function generateRandomString() {
-            var length = parseInt(document.getElementById("length").value);
-            var useDigits = document.getElementById("useDigits").checked;
-            var useUppercase = document.getElementById("useUppercase").checked;
-            var useLowercase = document.getElementById("useLowercase").checked;
-            var useSymbols = document.getElementById("useSymbols").checked;
-            
-            var characters = "";
-            if (useDigits) characters += "0123456789";
-            if (useUppercase) characters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            if (useLowercase) characters += "abcdefghijklmnopqrstuvwxyz";
-            if (useSymbols) characters += "!@#$%^&*()_+-=[]{}|;:,.<>?";
-            
-            if (characters === "") {
-                document.getElementById("randomStringResult").textContent = "操作無效:(";
+            let charset = "";
+            if (useDigits) charset += "0123456789";
+            if (useUppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if (useLowercase) charset += "abcdefghijklmnopqrstuvwxyz";
+            if (useSymbols) charset += "!@#$%^&*()_+";
+
+            if (charset === "") {
+                alert("請至少選擇一種字符類型！");
                 return;
             }
-            
-            var randomString = "";
-            for (var i = 0; i < length; i++) {
-                var randomIndex = Math.floor(Math.random() * characters.length);
-                randomString += characters.charAt(randomIndex);
+
+            let password = "";
+            for (let i = 0; i < length; i++) {
+                password += charset[Math.floor(Math.random() * charset.length)];
             }
-            
-            document.getElementById("randomStringResult").textContent = randomString;
+
+            displayResult('password_result', password);
         }
 
-        function copyToClipboard(elementId) {
-            var text = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(text).then(function() {
-                alert('Copied to clipboard: ' + text);
-            }, function(err) {
-                console.error('Could not copy text: ', err);
-            });
+        function displayResult(id, text) {
+            document.getElementById(id).textContent = text;
+        }
+
+        function copyToClipboard(el) {
+            navigator.clipboard.writeText(el.textContent);
+            el.style.background = "rgba(46, 204, 113, 0.3)";
+            setTimeout(() => el.style.background = "rgba(0, 0, 0, 0.2)", 800);
         }
     </script>
 </body>
